@@ -1,5 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Alert } from 'react-native';
 import  { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 // navigation
@@ -11,17 +12,32 @@ type RootStackParamList = {
 type Props = NativeStackScreenProps<RootStackParamList, 'home'>;
 
 const home = ({ navigation }: { navigation: any }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLogin = () => {
+    // Check for chief credentials
+    if (email.toLowerCase() === 'chief@foodiehub.com' && password === 'cheif123') {
+      // Navigate as a chief
+      navigation.navigate('Mainmenu', { userRole: 'chief' });
+    } else {
+      // For any other user, navigate as a customer
+      // You could add more robust validation here
+      navigation.navigate('Mainmenu', { userRole: 'customer' });
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.box}>
         <Image style={styles.logo} source={require('../assets/iconapp.png')} /> 
         <Text style={styles.boxText}>FoodieHub</Text>
         <Text style={styles.subtitleText}>Welcome!! Ready to explore delicious meals together</Text>
-        <TextInput style={styles.textinput} placeholder="Enter your email" />   
-        <TextInput style={styles.textinput} placeholder="Enter your password" secureTextEntry={true} />
+        <TextInput style={styles.textinput} placeholder="Enter your email" value={email} onChangeText={setEmail} autoCapitalize="none" />
+        <TextInput style={styles.textinput} placeholder="Enter your password" value={password} onChangeText={setPassword} secureTextEntry={true} />
         <TouchableOpacity
           style={styles.loginButton}
-          onPress={() => navigation.navigate('Mainmenu')}>
+          onPress={handleLogin}>
           <Text style={styles.loginButtonText}>Log in</Text>
         </TouchableOpacity>
       </View>

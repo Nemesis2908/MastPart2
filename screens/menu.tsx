@@ -17,7 +17,7 @@ type RootStackParamList = {
   addmeal: undefined;
 };
 
-type Props = NativeStackScreenProps<RootStackParamList, 'Mainmenu'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'Mainmenu'>; // This type includes navigation and route
 
 const handleLinkPress = async (url: string, errorMessage: string) => {
   const supported = await Linking.canOpenURL(url);
@@ -28,7 +28,10 @@ const handleLinkPress = async (url: string, errorMessage: string) => {
   }
 };
 
-const Mainmenu = ({ navigation }: { navigation: any }) => {
+const Mainmenu = ({ navigation, route }: { navigation: any, route: any }) => {
+  // Get the userRole from the navigation parameters, default to 'customer' if not provided
+  const userRole = route.params?.userRole || 'customer';
+
   const initialMenuItems = [
     { id: '1', name: 'Margherita Pizza', description: 'Fresh mozzarella, tomatoes, and basil.', course: "Main Dish", price: 'R200' },
     { id: '2', name: 'Classic Burger', description: 'Beef patty with lettuce, tomato, and our special sauce.', course: "Main Dish", price: 'R100' },
@@ -54,9 +57,11 @@ const Mainmenu = ({ navigation }: { navigation: any }) => {
       <ScrollView style={styles.container}>
         <View style={styles.headerContainer}>
           <Text style={styles.title}>Menu</Text>
-          <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('addmeal', { onAddMeal: handleAddMeal })}>
-            <Text style={styles.addButtonText}>Add Meal</Text>
-          </TouchableOpacity>
+          {userRole === 'chief' && (
+            <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('addmeal', { onAddMeal: handleAddMeal })}>
+              <Text style={styles.addButtonText}>Add Meal</Text>
+            </TouchableOpacity>
+          )}
         </View>
         {menuItems.map((item) => (
           <View key={item.id} style={styles.menuItem}>
