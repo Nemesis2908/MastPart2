@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
+import React, { useState, useLayoutEffect } from 'react';
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Alert } from 'react-native';
 import  { NativeStackScreenProps } from '@react-navigation/native-stack';
 
@@ -15,14 +15,19 @@ const home = ({ navigation }: { navigation: any }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: false,
+    });
+  }, [navigation]);
+
   const handleLogin = () => {
-    // Check for chief credentials
-    if (email.toLowerCase() === 'chief@foodiehub.com' && password === 'cheif123') {
-      // Navigate as a chief
+    // Chief access
+    if (email.toLowerCase() === 'chief@foodiehub.com' && password === 'chief123') {
+      // signed in as chief
       navigation.navigate('Mainmenu', { userRole: 'chief' });
     } else {
-      // For any other user, navigate as a customer
-      // You could add more robust validation here
+      // signed in as customer 
       navigation.navigate('Mainmenu', { userRole: 'customer' });
     }
   };
